@@ -54,8 +54,8 @@ vector<vector<int>> northWestCorner(TransportProblem& problem) {
 // Calculeaza costul total al unei solutii
 int calculateTotalCost(const TransportProblem& problem, const vector<vector<int>>& allocation) {
     int totalCost = 0;
-    for (int i = 0; i < allocation.size(); ++i) {
-        for (int j = 0; j < allocation[i].size(); ++j) {
+    for (auto i = 0ul; i < allocation.size(); ++i) {
+        for (auto j = 0ul; j < allocation[i].size(); ++j) {
             totalCost += allocation[i][j] * problem.cost[i][j];
         }
     }
@@ -165,13 +165,13 @@ void MODI(TransportProblem& problem, vector<vector<int>>& allocation) {
 
         // Ajustarea alocarii pe baza ciclului gasit
         int minValue = INF;
-        for (int k = 1; k < cycle.size(); k += 2) {
+        for (auto k = 1ul; k < cycle.size(); k += 2) {
             int i = cycle[k].first;
             int j = cycle[k].second;
             minValue = min(minValue, allocation[i][j]);
         }
 
-        for (int k = 0; k < cycle.size(); ++k) {
+        for (auto k = 0ul; k < cycle.size(); ++k) {
             int i = cycle[k].first;
             int j = cycle[k].second;
             if (k % 2 == 0) {
@@ -240,7 +240,7 @@ int main() {
     };
 
     test(problem);
-    
+
     benchmark(problem, 1000000);
 
     return 0;
