@@ -19,7 +19,7 @@ struct TransportProblem {
     vector<int> demand;
 };
 
-// Funcția care printează matricea
+// Functia care printeaza matricea
 void printMatrix(const vector<vector<int>>& matrix) {
     for (const auto& row : matrix) {
         for (const auto& elem : row) {
@@ -31,7 +31,7 @@ void printMatrix(const vector<vector<int>>& matrix) {
     cout << endl;
 }
 
-// Metoda colțului de Nord-Vest
+// Metoda coltului de Nord-Vest
 vector<vector<int>> northWestCorner(TransportProblem& problem) {
     int m = problem.supply.size();
     int n = problem.demand.size();
@@ -51,7 +51,7 @@ vector<vector<int>> northWestCorner(TransportProblem& problem) {
     return allocation;
 }
 
-// Calculează costul total al unei soluții
+// Calculeaza costul total al unei solutii
 int calculateTotalCost(const TransportProblem& problem, const vector<vector<int>>& allocation) {
     int totalCost = 0;
     for (int i = 0; i < allocation.size(); ++i) {
@@ -62,7 +62,7 @@ int calculateTotalCost(const TransportProblem& problem, const vector<vector<int>
     return totalCost;
 }
 
-// Găsirea ciclului pentru ajustare
+// Gasirea ciclului pentru ajustare
 bool findCycle(int startI, int startJ, const vector<vector<int>>& allocation, vector<pair<int, int>>& cycle) {
     int m = allocation.size();
     int n = allocation[0].size();
@@ -72,7 +72,7 @@ bool findCycle(int startI, int startJ, const vector<vector<int>>& allocation, ve
     function<bool(int, int, int, int)> dfs = [&](int i, int j, int prevI, int prevJ) -> bool {
         if (visited[i][j] == 2) return false;
         if (visited[i][j] == 1) {
-            // Ciclul este găsit
+            // Ciclul este gasit
             for (auto& p : path) {
                 cycle.push_back(p);
                 if (p == make_pair(i, j)) break;
@@ -113,7 +113,7 @@ void MODI(TransportProblem& problem, vector<vector<int>>& allocation) {
     vector<vector<int>> delta(m, vector<int>(n));
 
     while (true) {
-        // Calcularea potențialelor
+        // Calcularea potentialelor
         u[0] = 0;
         bool updated = true;
         while (updated) {
@@ -144,7 +144,7 @@ void MODI(TransportProblem& problem, vector<vector<int>>& allocation) {
             }
         }
 
-        // Găsirea celei mai negative valori delta
+        // Gasirea celei mai negative valori delta
         int minDelta = 0, minI = -1, minJ = -1;
         for (int i = 0; i < m; ++i) {
             for (int j = 0; j < n; ++j) {
@@ -156,14 +156,14 @@ void MODI(TransportProblem& problem, vector<vector<int>>& allocation) {
             }
         }
 
-        // Dacă nu există valori negative delta, soluția este optimă
+        // Daca nu exista valori negative delta, solutia este optima
         if (minDelta >= 0) break;
 
-        // Găsirea ciclului în matricea de alocare
+        // Gasirea ciclului in matricea de alocare
         vector<pair<int, int>> cycle;
         findCycle(minI, minJ, allocation, cycle);
 
-        // Ajustarea alocării pe baza ciclului găsit
+        // Ajustarea alocarii pe baza ciclului gasit
         int minValue = INF;
         for (int k = 1; k < cycle.size(); k += 2) {
             int i = cycle[k].first;
@@ -194,55 +194,48 @@ int main() {
         {150, 125, 225}
     };
 
-    vector<vector<int>> allocation = northWestCorner(problem);
+    // vector<vector<int>> allocation = northWestCorner(problem);
 
-    cout << "Soluția inițială folosind metoda colțului de Nord-Vest:\n";
-    printMatrix(allocation);
-    cout << "Costul total inițial: " << calculateTotalCost(problem, allocation) << endl;
+    // cout << "Solutia initiala folosind metoda coltului de Nord-Vest:\n";
+    // printMatrix(allocation);
+    // cout << "Costul total initial: " << calculateTotalCost(problem, allocation) << endl;
 
-    MODI(problem, allocation);
+    // MODI(problem, allocation);
     
-    cout << "Soluția optimizată folosind metoda MODI:\n";
-    printMatrix(allocation);
-    cout << "Costul total minimizat: " << calculateTotalCost(problem, allocation) << endl;
+    // cout << "Solutia optimizata folosind metoda MODI:\n";
+    // printMatrix(allocation);
+    // cout << "Costul total minimizat: " << calculateTotalCost(problem, allocation) << endl;
 
-    //  Numărul de iterații pentru benchmarking
-    const int numIterations = 1000000;
+    // return 0;
+
+     // Numarul de iteratii pentru benchmarking
+    const int numIterations = 3;
     vector<double> executionTimes;
 
     for (int i = 0; i < numIterations; ++i) {
-        TransportProblem problem = {
-            {
-                {20, 30, 10},
-                {30, 40, 25},
-                {35, 15, 20}
-            },
-            {100, 300, 100},
-            {150, 125, 225}
-        };
-        // Începeți cronometrul
+        // Incepeti cronometrul
         auto start = high_resolution_clock::now();
 
-        // Rezolvați problema de transport
+        // Rezolvati problema de transport
         vector<vector<int>> allocation = northWestCorner(problem);
         MODI(problem, allocation);
 
         // Oprim cronometrul
         auto stop = high_resolution_clock::now();
 
-        // Calculăm timpul de execuție pentru această iterație
+        // Calculam timpul de executie pentru aceasta iteratie
         auto duration = duration_cast<microseconds>(stop - start);
-        double durationSec = duration.count() / 1000000.0; // Convertim în secunde
+        double durationSec = duration.count() / 1000000.0; // Convertim in secunde
 
-        // Adăugăm timpul de execuție la lista de execuții
+        // Adaugam timpul de executie la lista de executii
         executionTimes.push_back(durationSec);
     }
 
-    // Calculăm timpul mediu de execuție
+    // Calculam timpul mediu de executie
     double averageTime = accumulate(executionTimes.begin(), executionTimes.end(), 0.0) / executionTimes.size();
 
-    // Afișăm rezultatele
-    cout << "Timpul mediu de execuție pentru o iterație: " << averageTime << " secunde." << endl;
+    // Afisam rezultatele
+    cout << "Timpul mediu de executie pentru o iteratie: " << averageTime << " secunde." << endl;
 
     return 0;
 }
