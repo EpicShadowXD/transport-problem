@@ -183,37 +183,27 @@ void MODI(TransportProblem& problem, vector<vector<int>>& allocation) {
     }
 }
 
-int main() {
-    TransportProblem problem = {
-        {
-            {20, 30, 10},
-            {30, 40, 25},
-            {35, 15, 20}
-        },
-        {100, 300, 100},
-        {150, 125, 225}
-    };
+void test(TransportProblem problem) {
+    vector<vector<int>> allocation = northWestCorner(problem);
 
-    // vector<vector<int>> allocation = northWestCorner(problem);
+    cout << "Solutia initiala folosind metoda coltului de Nord-Vest:\n";
+    printMatrix(allocation);
+    cout << "Costul total initial: " << calculateTotalCost(problem, allocation) << endl;
 
-    // cout << "Solutia initiala folosind metoda coltului de Nord-Vest:\n";
-    // printMatrix(allocation);
-    // cout << "Costul total initial: " << calculateTotalCost(problem, allocation) << endl;
-
-    // MODI(problem, allocation);
+    MODI(problem, allocation);
     
-    // cout << "Solutia optimizata folosind metoda MODI:\n";
-    // printMatrix(allocation);
-    // cout << "Costul total minimizat: " << calculateTotalCost(problem, allocation) << endl;
+    cout << "Solutia optimizata folosind metoda MODI:\n";
+    printMatrix(allocation);
+    cout << "Costul total minimizat: " << calculateTotalCost(problem, allocation) << endl;
+}
 
-    // return 0;
-
-     // Numarul de iteratii pentru benchmarking
-    const int numIterations = 3;
+void benchmark(TransportProblem inputProblem, int numIterations) {
     vector<double> executionTimes;
 
     for (int i = 0; i < numIterations; ++i) {
-        // Incepeti cronometrul
+        TransportProblem problem{inputProblem};
+
+        // Pornim cronometrul
         auto start = high_resolution_clock::now();
 
         // Rezolvati problema de transport
@@ -236,6 +226,22 @@ int main() {
 
     // Afisam rezultatele
     cout << "Timpul mediu de executie pentru o iteratie: " << averageTime << " secunde." << endl;
+}
+
+int main() {
+    TransportProblem problem = {
+        {
+            {20, 30, 10},
+            {30, 40, 25},
+            {35, 15, 20}
+        },
+        {100, 300, 100},
+        {150, 125, 225}
+    };
+
+    test(problem);
+    
+    benchmark(problem, 1000000);
 
     return 0;
 }
